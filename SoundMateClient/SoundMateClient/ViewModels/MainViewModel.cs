@@ -14,6 +14,9 @@ using System.Windows.Input;
 using System.Xml.Linq;
 using SoundMateClient.Views;
 using SoundMateClient.Utils;
+using System.Diagnostics;
+using SoundMateClient.Controls;
+using System.Windows;
 
 namespace SoundMateClient.ViewModels
 {
@@ -26,7 +29,12 @@ namespace SoundMateClient.ViewModels
         /// Title of the application, as displayed in the top bar of the window
         /// </summary>
         public string Title {
-            get { return "SoundMateClient"; }
+            get { return "SoundMate Client"; }
+        }
+
+        public ObservableCollection<ProcessList> Processes {
+            get;
+            set;
         }
         #endregion
 
@@ -35,83 +43,91 @@ namespace SoundMateClient.ViewModels
         {
             // DialogService is used to handle dialogs
             this.DialogService = new MvvmDialogs.DialogService();
+            OnLoad();
         }
 
         #endregion
 
         #region Methods
+        public void OnLoad()
+        {
+            Process[] localAll = Process.GetProcesses();
+            Process[] processlist = Process.GetProcesses();
 
+            ObservableCollection<ProcessList> processes = new ObservableCollection<ProcessList>();
+            foreach (Process theprocess in processlist) {
+                Console.WriteLine("Process: {0} ID: {1}", theprocess.ProcessName, theprocess.Id);                
+                if (VolumeMixer.GetApplicationVolume(theprocess.Id) >= 0) {
+                    processes.Add(new ProcessList(theprocess.ProcessName, theprocess.Id, VolumeMixer.GetApplicationVolume(theprocess.Id)));
+                }
+            }
+            Processes = processes;
+        }
         #endregion
 
         #region Commands
-        public RelayCommand<object> SampleCmdWithArgument { get { return new RelayCommand<object>(OnSampleCmdWithArgument); } }
+        public RelayCommand<object> test { get { return new RelayCommand<object>(OnTest); } }
 
-        public ICommand SaveAsCmd { get { return new RelayCommand(OnSaveAsTest, AlwaysFalse); } }
-        public ICommand SaveCmd { get { return new RelayCommand(OnSaveTest, AlwaysFalse); } }
-        public ICommand NewCmd { get { return new RelayCommand(OnNewTest, AlwaysFalse); } }
-        public ICommand OpenCmd { get { return new RelayCommand(OnOpenTest, AlwaysFalse); } }
-        public ICommand ShowAboutDialogCmd { get { return new RelayCommand(OnShowAboutDialog, AlwaysTrue); } }
-        public ICommand ExitCmd { get { return new RelayCommand(OnExitApp, AlwaysTrue); } }
-
-        private bool AlwaysTrue() { return true; }
-        private bool AlwaysFalse() { return false; }
-
-        private void OnSampleCmdWithArgument(object obj)
+        
+        private void OnTest(object obj)
         {
-            // TODO
+            
+
         }
 
-        private void OnSaveAsTest()
-        {
-            var settings = new SaveFileDialogSettings {
-                Title = "Save As",
-                Filter = "Sample (.xml)|*.xml",
-                CheckFileExists = false,
-                OverwritePrompt = true
-            };
-
-            bool? success = DialogService.ShowSaveFileDialog(this, settings);
-            if (success == true) {
-                // Do something
-                Log.Info("Saving file: " + settings.FileName);
-            }
-        }
-        private void OnSaveTest()
-        {
-            // TODO
-        }
-        private void OnNewTest()
-        {
-            // TODO
-        }
-        private void OnOpenTest()
-        {
-            var settings = new OpenFileDialogSettings {
-                Title = "Open",
-                Filter = "Sample (.xml)|*.xml",
-                CheckFileExists = false
-            };
-
-            bool? success = DialogService.ShowOpenFileDialog(this, settings);
-            if (success == true) {
-                // Do something
-                Log.Info("Opening file: " + settings.FileName);
-            }
-        }
-        private void OnShowAboutDialog()
-        {
-            Log.Info("Opening About dialog");
-            AboutViewModel dialog = new AboutViewModel();
-            var result = DialogService.ShowDialog<About>(this, dialog);
-        }
-        private void OnExitApp()
-        {
-            System.Windows.Application.Current.MainWindow.Close();
-        }
         #endregion
 
         #region Events
 
         #endregion
+    }
+
+    public class ProcessList : ViewModelBase
+    {
+        public ProcessList(string name, int id, float volume)
+        {
+            this.name = name;
+            this.id = id;
+            this.volume = volume;
+        }
+
+        private string name = "";
+        public string Name {
+            get {
+                return name;
+            }
+            set {
+                if (name != value) {
+                    name = value;
+                    NotifyPropertyChanged("Name");
+                }
+            }
+        }
+
+        private int id = 0;
+        public int ID {
+            get {
+                return id;
+            }
+            set {
+                if (id != value) {
+                    id = value;
+                    NotifyPropertyChanged("ID");
+                }
+            }
+        }
+
+        private float volume;
+        public float Volume {
+            get { return volume; }
+            set {
+                if (volume != value) {
+                    volume = value;
+                    VolumeMixer.SetApplicationVolume(this.id, volume);
+                    NotifyPropertyChanged("Volume");
+                }
+            }
+        }
+        
     }
 }

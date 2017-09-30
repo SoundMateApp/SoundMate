@@ -11,13 +11,15 @@ using System.Windows;
 using System.ComponentModel;
 using SoundMateClient.ViewModels;
 using SoundMateClient.Views;
+using System.Windows.Forms;
 
 namespace SoundMateClient
 {
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private static readonly ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static MainWindow app;
+        public static NotifyIcon icon;
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
@@ -33,6 +35,11 @@ namespace SoundMateClient
             var context = new MainViewModel();
             app.DataContext = context;
             app.Show();
+
+            App.icon = new NotifyIcon();
+            //icon.Click += new EventHandler(icon_Click);
+            icon.Icon = SoundMateClient.Properties.Resources.icon;
+            icon.Visible = true;
 
             if (e.Args.Length == 1) //make sure an argument is passed
             {

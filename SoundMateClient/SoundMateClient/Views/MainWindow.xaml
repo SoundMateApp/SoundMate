@@ -15,37 +15,40 @@
         WindowState="Normal">
 
     <Window.Resources>
-        <!-- Insert here your Data Templates -->
-        <DataTemplate x:Key="SampleTemplate">
-            <StackPanel/>
+
+        <DataTemplate x:Key = "processTemplate">
+            <Grid Background="White" Margin="5, 5, 5, 0">
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0"  Grid.Column="1" Background="#FF34495E">
+                    <TextBlock FontWeight="DemiBold"  VerticalAlignment="Center" HorizontalAlignment="Center" Text = "{Binding Path = Name, Mode = TwoWay}"  Padding="10,5,10,5" Foreground="White"/>
+                </Grid>
+                <Slider Grid.Row="1"  Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Value="{Binding Path = Volume, Mode = TwoWay}" Maximum="100" Width="100"/>
+            
+            
+            </Grid>
         </DataTemplate>
-        
+
+
     </Window.Resources>
-    <Window.InputBindings>
-        <!-- Example of Keyboard shortcuts -->
-        <KeyBinding Command="{Binding SaveCmd}" Key="S" Modifiers="Ctrl" />
-        <KeyBinding Command="{Binding SaveAsCmd}" Gesture="Ctrl+Shift+S" />
-        <KeyBinding Command="{Binding OpenCmd}" Gesture="Ctrl+O" />
-        <KeyBinding Command="{Binding NewCmd}" Gesture="Ctrl+N" />
-        <KeyBinding Command="{Binding ExitCmd}" Gesture="Alt+F4" />
-    </Window.InputBindings>
-
-    <DockPanel>
-        <!-- File Menu -->
-        <Menu DockPanel.Dock="Top" Margin="0,0,0.4,0">
-            <MenuItem Header="File">
-                <MenuItem Header="New" Command="{Binding NewCmd}" InputGestureText="Ctrl+N" />
-                <MenuItem Header="Open" Command="{Binding OpenCmd}" InputGestureText="Ctrl+O" />
-                <MenuItem Header="Save" Command="{Binding SaveCmd}" InputGestureText="Ctrl+S" />
-                <MenuItem Header="Save As" Command="{Binding SaveAsCmd}" InputGestureText="Ctrl+Shift+S"/>
-                <Separator />
-                <MenuItem Header="Exit" Command="{Binding ExitCmd}" InputGestureText="Alt+F4"/>
-            </MenuItem>
-            <MenuItem Header="About" Command="{Binding ShowAboutDialogCmd}"/>
-        </Menu>
-
-        <StackPanel>
-            <!-- Place here your content -->
-        </StackPanel>
-    </DockPanel>
+    <Grid Background="#FF2C3E50">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition MinWidth="300" MaxWidth="500"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <ItemsControl Padding="0,0,0,5" Grid.Column="1" ItemsSource = "{Binding Processes}" ItemTemplate = "{StaticResource processTemplate}" Background="#FFDADADA">
+        </ItemsControl>
+    </Grid>
 </Window>

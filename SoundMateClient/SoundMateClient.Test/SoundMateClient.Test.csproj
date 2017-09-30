@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2EA7D9B6-E252-4FE0-88F5-95300221FB1C}</ProjectGuid>
+    <ProjectGuid>{B4F152BD-EB96-416E-9E47-82BACCCCACF4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SoundMateClient.Test</RootNamespace>
