@@ -12,16 +12,16 @@ namespace SoundMateClient.Controls
     {
         const int DEFAULT_IP = 11000;
 
-        UdpClient listener;
-        bool receive = true;
+        static UdpClient listener;
+        static bool receive = true;
 
-        public void Stop()
+        public static void Stop()
         {
             receive = false;
             listener.Client.Close();
         }       
         
-        public void Start(ref string input)
+        public static void Start(ref string input)
         {
 
             listener = new UdpClient(DEFAULT_IP);
@@ -31,8 +31,15 @@ namespace SoundMateClient.Controls
                 Console.WriteLine("Started Listening");
                 byte[] inputBytes = listener.Receive(ref groupEP);
                 input = Encoding.ASCII.GetString(inputBytes);
-                Console.WriteLine(input);
             }
+        }
+
+        public static void Send()
+        {
+            UdpClient sender = new UdpClient();
+            sender.Connect("127.0.0.1", 11000);
+            Byte[] sendBytes = Encoding.ASCII.GetBytes("Is anybody there?");
+            sender.Send(sendBytes, sendBytes.Length);
         }
     }
 }

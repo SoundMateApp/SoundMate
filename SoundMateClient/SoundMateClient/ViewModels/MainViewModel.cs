@@ -58,8 +58,9 @@ namespace SoundMateClient.ViewModels
             // DialogService is used to handle dialogs
             this.DialogService = new MvvmDialogs.DialogService();
             OnLoad();
-            Network x = new Network();
-            Task.Factory.StartNew(() => x.Start(ref dataInput));
+            Task.Factory.StartNew(() => Network.Start(ref dataInput));
+            Network.Send();
+            Console.WriteLine(dataInput);
         }
 
         #endregion
