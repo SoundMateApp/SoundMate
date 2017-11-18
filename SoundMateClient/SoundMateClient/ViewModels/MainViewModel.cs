@@ -17,6 +17,9 @@ using SoundMateClient.Utils;
 using System.Diagnostics;
 using SoundMateClient.Controls;
 using System.Windows;
+using System.Net.Sockets;
+using System.Net;
+using System.Threading;
 
 namespace SoundMateClient.ViewModels
 {
@@ -36,6 +39,17 @@ namespace SoundMateClient.ViewModels
             get;
             set;
         }
+
+        private string dataInput = "";
+        public string DataInput {
+            get { return dataInput; }
+            set {
+                if (dataInput != value) {
+                    dataInput = value;
+                    NotifyPropertyChanged("DataInput");
+                }
+            }
+        }
         #endregion
 
         #region Constructors
@@ -44,6 +58,8 @@ namespace SoundMateClient.ViewModels
             // DialogService is used to handle dialogs
             this.DialogService = new MvvmDialogs.DialogService();
             OnLoad();
+            Network x = new Network();
+            Task.Factory.StartNew(() => x.Start(ref dataInput));
         }
 
         #endregion
@@ -55,8 +71,7 @@ namespace SoundMateClient.ViewModels
             Process[] processlist = Process.GetProcesses();
 
             ObservableCollection<ProcessList> processes = new ObservableCollection<ProcessList>();
-            foreach (Process theprocess in processlist) {
-                Console.WriteLine("Process: {0} ID: {1}", theprocess.ProcessName, theprocess.Id);                
+            foreach (Process theprocess in processlist) {            
                 if (VolumeMixer.GetApplicationVolume(theprocess.Id) >= 0) {
                     processes.Add(new ProcessList(theprocess.ProcessName, theprocess.Id, VolumeMixer.GetApplicationVolume(theprocess.Id)));
                 }

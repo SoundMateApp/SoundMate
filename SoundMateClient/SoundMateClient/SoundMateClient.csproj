@@ -106,6 +106,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\Network.cs" />
     <Compile Include="Controls\VolumeMixer.cs" />
     <Compile Include="Models\SampleModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
