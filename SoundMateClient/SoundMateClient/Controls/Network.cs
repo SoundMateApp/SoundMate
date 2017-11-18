@@ -24,8 +24,8 @@ namespace SoundMateClient.Controls
         public void Start(ref string input)
         {
 
-            listener = new UdpClient(11000);
-            IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, 11000);
+            listener = new UdpClient(DEFAULT_IP);
+            IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, DEFAULT_IP);
             
             while (receive) {
                 Console.WriteLine("Started Listening");
